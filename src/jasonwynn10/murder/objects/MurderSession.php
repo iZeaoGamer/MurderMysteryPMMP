@@ -39,7 +39,7 @@ class MurderSession {
 	 * @var string|Player $player
 	 * @return string
 	 */
-	public function getRole($player) : string{
+	public function getRole(Player $player) : string{
 		$player = $player instanceof Player ? $player->getName() : $player;
 		$key = array_search($player, $this->getPlayers());
 		if($key != "killer" and $key != "detective") {
