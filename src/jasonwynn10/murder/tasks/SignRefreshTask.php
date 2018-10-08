@@ -2,14 +2,13 @@
 namespace jasonwynn10\murder\tasks;
 
 use pocketmine\plugin\Plugin;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 
-class SignRefreshTask extends PluginTask {
+class SignRefreshTask extends Task {
 	public function __construct(Plugin $owner) {
-		parent::__construct($owner);
 
 	}
-	public function onRun($currentTick) {
+	public function onRun(int $currentTick) : void{
 		// TODO: Implement onRun() method.
 	}
 }
