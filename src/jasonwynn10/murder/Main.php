@@ -1,7 +1,7 @@
 <?php
 namespace jasonwynn10\murder;
 
-use pocketmine\lang\BaseLang;
+use pocketmine\lang\Language;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
@@ -18,8 +18,8 @@ use jasonwynn10\murder\events\MurderListener;
 use spoondetector\SpoonDetector;
 
 class Main extends PluginBase {
-	/** @var BaseLang $baseLang */
-	private $baseLang = null;
+	/** @var Language $baseLang */
+	private $language = null;
 	/** @var string[][] $queue */
 	private $queue = [];
 	/** @var MurderSession[] $sessions */
@@ -30,28 +30,28 @@ class Main extends PluginBase {
 	private $signTiles = [];
 	/** @var string[] $maps */
 	private $maps = [];
-	public function onLoad() {
+	public function onLoad() : void{
 		$this->getServer()->getCommandMap()->register(MurderMystery::class, new MurderMystery($this));
 		$this->getServer()->getPluginManager()->registerEvents(new MurderListener($this), $this);
 	}
-	public function onEnable() {
+	public function onEnable() : void{
 		SpoonDetector::printSpoon($this,"spoon.txt");
 		$this->saveDefaultConfig();
-		$lang = $this->getConfig()->get("language", BaseLang::FALLBACK_LANGUAGE);
-		$this->baseLang = new BaseLang($lang, $this->getFile() . "resources/");
+		$lang = $this->getConfig()->get("language", Language::FALLBACK_LANGUAGE);
+		$this->lang = new Language($lang, $this->getFile() . "resources/");
 		$this->signConfig = new Config($this->getDataFolder()."signs.yml",CONFIG::YAML);
 		$this->loadMaps();
 		$this->loadSigns();
 		$this->getLogger()->notice(TF::GREEN."Enabled!");
 	}
-	public function onDisable() {
+	public function onDisable() : void{
 		$this->getLogger()->notice(TF::GREEN."Disabled!");
 	}
 
 	/**
 	 * @return bool
 	 */
-	public static function isDev() {
+	public static function isDev() : bool {
 		return self::isPhar();
 	}
 
@@ -124,8 +124,8 @@ class Main extends PluginBase {
 	 * @api
 	 * @return BaseLang
 	 */
-	public function getLanguage() : BaseLang{
-		return $this->baseLang;
+	public function getLanguage() : Language{
+		return $this->language;
 	}
 	/**
 	 * @api
@@ -158,7 +158,7 @@ class Main extends PluginBase {
 	 * @param Player $player
 	 * @return bool
 	 */
-	public function inQueue(Player $player) {
+	public function inQueue(Player $player) : bool {
 		foreach($this->queue as $map => $players) {
 			if(in_array($player->getName(),$players)){
 				return true;
@@ -188,7 +188,7 @@ class Main extends PluginBase {
 	 *
 	 * @return int
 	 */
-	public function getNumberOfFreeArenas(){
+	public function getNumberOfFreeArenas() : int{
 		$numberOfFreeArenas = count($this->sessions);
 		foreach ($this->sessions as $session){
 			if($session->isActive()){
@@ -204,7 +204,7 @@ class Main extends PluginBase {
 	 * @param string|Player $player
 	 * @return bool|MurderSession
 	 */
-	public function inSession($player) {
+	public function inSession(Player $player) : MurderSession{
 		$player = $player instanceof Player ? $player->getName() : $player;
 		foreach($this->sessions as $session) {
 			if(in_array($player,$session->getPlayers())) {
@@ -219,7 +219,7 @@ class Main extends PluginBase {
 	 *
 	 * @return string[]
 	 */
-	public function getMaps() {
+	public function getMaps(){
 		return $this->maps;
 	}
 }
